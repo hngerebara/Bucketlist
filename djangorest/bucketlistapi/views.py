@@ -15,3 +15,9 @@ class CreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         """Saves the post date when a new bucketlist is created"""
         serializer.save()
+        
+class DetailsView(generics.RetrieveUpdateDestroyAPIView):
+    """This class handles the http GET, PUT and DELETE requests."""
+
+    queryset = Bucketlist.objects.all()
+    serializer_class = BucketlistSerializer
