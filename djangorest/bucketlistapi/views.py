@@ -6,15 +6,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from djangorest.bucketlistapi.serializers import BucketSerializer, BucketlistSerializer
-from djangorest.bucketlistapi.models import Bucket, Bucketlist
+from .serializers import BucketSerializer, BucketlistSerializer
+from .models import Bucket, Bucketlist
 
 
 # Create your views here.
+class BucketObject(APIView):
+    def get_object(self, pk):
+        try:
+            return Bucket.objects.get(pk=pk)
+        except Bucket.DoesNotExist:
+            raise Http404
 
 class BucketCreateView(APIView):
     """
-       Create a Bucket
+       Creates a new bucket
     """
 
     def post(self, request, format=None):
@@ -24,18 +30,32 @@ class BucketCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class BucketView(APIView):
+    """
+       Retrieves all Buckets
+    """
 
-class BucketRetrieveView(APIView):
-    """
-       List all Buckets
-    """
     def get(self, request, format=None):
         buckets= Bucket.objects.all()
         serializer = BucketSerializer(buckets, many=True)
         return Response(serializer.data)
 
+class BucketSingleRetriveView(BucketObject):
+    """
+        Retrieve a single bucket with it's list
+    """
+    def get_object(self, pk):
+        try:
+            return Bucket.objects.get(pk=pk)
+        except Bucket.DoesNotExist:
+            raise Http404
 
-class BucketUpdateView(APIView):
+    def get(self, request, pk, format=None):
+        bucket = self.get_object(pk)
+        serializer = BucketSerializer(bucket)
+        return Response(serializer.data)
+
+class BucketUpdateView(BucketObject):
     """
        Update a Bucket
     """
@@ -47,7 +67,7 @@ class BucketUpdateView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class BucketDeleteView(APIView):
+class BucketDeleteView(BucketObject):
     """
        Delete a Bucket
     """
@@ -57,10 +77,18 @@ class BucketDeleteView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class BucketlistObject(APIView):
+    def get_object(self, pk):
+        try:
+            return Bucketlist.objects.get(pk=pk)
+        except Bucket.DoesNotExist:
+            raise Http404
+
 class BucketlistCreateView(APIView):
     """
-        Create a bucketlist
+        Creates a new bucketlist
     """
+
     def post(self, request, format=None):
         serializer = BucketlistSerializer(data=request.data)
         if serializer.is_valid():
@@ -69,16 +97,7 @@ class BucketlistCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BucketlistRetriveView(APIView):
-    """
-        Retrieves all bucketlist
-    """
-    def get(self, request, format=None):
-        bucketlist = self.Bucketlist.objects.all()
-        serializer = BucketlistSerializer(bucketlist)
-        return Response(serializer.data)
-
-class BucketlistSingleRetriveView(APIView):
+class BucketlistSingleRetriveView(BucketlistObject):
     """
         Retrieve a single bucketlist
     """
@@ -93,7 +112,7 @@ class BucketlistSingleRetriveView(APIView):
         serializer = BucketlistSerializer(bucketlist)
         return Response(serializer.data)
 
-class BucketlistUpdateView(APIView):
+class BucketlistUpdateView(BucketlistObject):
     """
         Update a bucketlist
     """
@@ -105,7 +124,7 @@ class BucketlistUpdateView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class BucketlistDeleteView(APIView):
+class BucketlistDeleteView(BucketlistObject):
     """
         Delete a bucketlist
     """

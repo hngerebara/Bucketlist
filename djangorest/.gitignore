@@ -4,7 +4,7 @@ __pycache_/
 .DS_Store
 .env
 *.sqlite
-
+.idea/
 *.egg-info
 
 build
