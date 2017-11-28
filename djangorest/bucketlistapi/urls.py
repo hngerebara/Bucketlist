@@ -1,7 +1,8 @@
 from rest_framework.urlpatterns import format_suffix_patterns
-from django.conf.urls import url
+from django.conf.urls import url, include
 from .views import BucketCreateView, BucketView, BucketDeleteView, BucketUpdateView, BucketlistCreateView, BucketSingleRetriveView, BucketlistDeleteView,BucketlistSingleRetriveView,BucketlistUpdateView
 urlpatterns = {
+    url(r'^login/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^bucket/new$', BucketCreateView.as_view(), name="bucket_create"),
     url(r'^bucket/$', BucketView.as_view(), name="buckets"),
     url(r'^bucket/(?P<pk>[0-9]+)/$', BucketSingleRetriveView.as_view(), name="bucketlists"),
