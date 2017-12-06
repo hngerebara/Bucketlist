@@ -10,37 +10,52 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = environ.Path(__file__) - 3
+
+APPS_DIR = ROOT_DIR.path('apps')
+
+env = environ.Env()
+# This section added from an update to standards in CookieCutter Django to ensure no errors are encountered at runserver/migrations
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+if READ_DOT_ENV_FILE:
+    env_file = str(ROOT_DIR.path('.env'))
+    print('Loading : {}'.format(env_file))
+    env.read_env(env_file)
+    print('The .env file has been loaded. See base.py for more information')
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5nc8!)n+kfics86nv4iv^g^32r!k^_7)8*g=eq@8q-+a8)$f1t'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = env.bool('DJANGO_DEBUG', False)
 
 
 # Application definition
-
-INSTALLED_APPS = [
+DJANGO_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+)
+
+THIRD_PARTY_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
-    'bucketlistapi'
-]
+)
+
+LOCAL_APPS = (
+    'apps.bucketlistapi',
+)
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,7 +67,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'djangorest.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -70,7 +85,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'djangorest.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
@@ -124,6 +139,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+STATICFILES_DIRS = (
+    str(APPS_DIR.path('static')),
+)
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = str(APPS_DIR('media'))
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

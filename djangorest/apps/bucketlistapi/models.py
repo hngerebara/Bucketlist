@@ -5,9 +5,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
+class Bucket(models.Model):
+    """This class represents the bucket model"""
+    title = models.CharField(max_length=255, blank=False, unique=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """Return the title of the model instance"""
+        return "{}".format(self.title)
 
 class Bucketlist(models.Model):
     """This class represents the bucketlists model"""
+    bucket = models.ForeignKey(Bucket, related_name='bucketlists')
     name = models.CharField(max_length=255, blank=False, unique=True)
     description = models.TextField(blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -19,7 +28,6 @@ class Bucketlist(models.Model):
 
 class Review(models.Model):
     bucketlist = models.ForeignKey(Bucketlist, related_name='reviews')
-    title = models.CharField(max_length=255)
     review = models.TextField()
     rating = models.IntegerField()
     created_by = models.ForeignKey(User)

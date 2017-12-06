@@ -5,23 +5,49 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.core.urlresolvers import reverse
-from .models import Bucketlist
+from .models import Bucketlist, Review
 
 # Create your tests here.
 
-class ModelTestCase(TestCase):
+class BucketlistModelTestCase(TestCase):
     """ This class defines the test suite for bucketlist model."""
 
     def setUp(self):
         """Define the test client and other test variables."""
-        self.bucketlist_name =" Write world class code"
-        self.bucketlist = Bucketlist(name=self.bucketlist_name)
+        self.bucketlist_name ="Learn Django"
+        self.bucketlist_desciption ="Learning to code in python"
+        self.bucketlist = Bucketlist(name=self.bucketlist_name, description=self.bucketlist_desciption)
 
     def test_model_can_create_a_bucketlist(self):
         """Test the bucketlist model can create a bucketlist."""
         old_count = Bucketlist.objects.count()
         self.bucketlist.save()
         new_count = Bucketlist.objects.count()
+        self.assertNotEqual(old_count, new_count)
+
+
+class ReviewModelTestCase(TestCase):
+    """ This class defines the test suite for bucketlist model."""
+
+    def setUp(self):
+        """Define the test client and other test variables."""
+        self.review_title ="Review for learn django"
+        self.review_review ="Learning django has been great"
+        self.review_rating = 4
+        self.review_created_by = "Hopez"
+        self.review_bucketlistId = 1
+        self.review = Bucketlist(
+            title=self.review_title,
+            review=self.review_review,
+            rating=self.review_rating,
+            created_by=self.review_created_by,
+            bucketlist=self.review_bucketlistId
+        )
+
+    def test_model_can_create_a_review(self):
+        old_count = Review.objects.count()
+        self.review.save()
+        new_count = Review.objects.count()
         self.assertNotEqual(old_count, new_count)
 
 class ViewTestCase(TestCase):
