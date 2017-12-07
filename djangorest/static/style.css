@@ -1,0 +1,45 @@
+.container {
+  display: flex;
+  align-items: scretch;
+  justify-content: center;
+  height: 100vh;
+ }
+ .menu {
+    padding: 10px;
+    background-color: royalblue;
+    color: white;
+    width: 20%;
+}
+.side-menu {
+    background-color: darken(royalblue, 10);
+}
+
+.wrapper {
+  width: 80%;
+}
+
+.top-menu {
+  background-color: darken(royalblue, 5);
+  color: white;
+  padding: 20px 10px;
+  display: flex;
+}
+
+.menu-text {
+    width: 100%;
+}
+
+.menu-profile {
+    width: 50%;
+    text-align: right;
+
+}
+
+.cards {
+  padding: 10px;
+  display: flex;
+}
+
+.panel {
+    margin: 0 10px;
+ }

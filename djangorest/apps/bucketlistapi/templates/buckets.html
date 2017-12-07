@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    {% for obj in Buckets %}
+        <div class="col-md-6 card">
+            <div class="col-md-6 card-body">
+                <h4 class="card-title">{{ obj.title }}</h4>
+                <p class="card-text">{{ obj.description }}</p>
+                <p class="card-footer">{{ obj.date_created }}</p>
+                <a href="#" class="link-btn">View Bucketlists</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
