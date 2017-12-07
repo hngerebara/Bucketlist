@@ -6,29 +6,29 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from rest_framework.response import Response
 from django.shortcuts import render, get_object_or_404, redirect
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import status, generics
 from .serializers import BucketSerializer, BucketlistSerializer, ReviewSerializer
 from .models import Bucket, Bucketlist, Review
+from .forms import BucketForm
 
 
-class BucketView(APIView):
+class ListCreateBucket(APIView):
+    # permission_classes = (IsAdminOrReadOnly,)
+
     def get(self, request, format=None):
         all_buckets = Bucket.objects.all()
         serializer = BucketSerializer(all_buckets, many=True)
-        context = {'Buckets' : serializer.data}
-        return render(request, 'index.html', context)
+        return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = BucketSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class BucketDetailView(APIView):
-
-    permission_classes = (IsAdminOrReadOnly,)
-
     def get_object(self, bucket_id):
         try:
             return Bucket.objects.get(pk=bucket_id)
@@ -40,11 +40,10 @@ class BucketDetailView(APIView):
         serializer = BucketSerializer(bucket)
         return Response(serializer.data)
 
-    def put(self, request, bucket_id, format=None):
-        bucket = self.get_object(bucket_id=bucket_id)
+    def put(self, request, pk, format=None):
+        bucket = get_object_or_404(Bucket, bucket_id=pk)
         serializer = BucketSerializer(bucket, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        if not serializer.is_valid():
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -54,16 +53,14 @@ class BucketDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class BucketlistView(APIView):
+class ListCreateBucketlistView(APIView):
 
-    permission_classes = (IsAdminOrReadOnly,)
+    # permission_classes = (IsAdminOrReadOnly,)
 
     def get(self, request, format=None):
-        bucketlists = Bucketlist.objects.all()
-        serializer = BucketlistSerializer(bucketlists, many=True)
-        bucketlists_context = {'object_lists': serializer.data}
-        return Response(bucketlists_context)
-        # return render(request, 'index.html', bucketlists_context)
+        all_bucketlists = Bucketlist.objects.all()
+        serializer = BucketlistSerializer(all_bucketlists, many=True)
+        return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = BucketlistSerializer(data=request.data)
@@ -74,7 +71,7 @@ class BucketlistView(APIView):
 
 class BucketlistDetailView(APIView):
 
-    permission_classes = (IsAdminOrReadOnly,)
+    # permission_classes = (IsAdminOrReadOnly,)
 
     def get_object(self, bucketlist_id):
         try:
@@ -100,9 +97,9 @@ class BucketlistDetailView(APIView):
         bucketlist.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ReviewListView(generics.ListCreateAPIView):
+class ListCreateReviewView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    # permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
         # Automatically set the user using the one who is logged in
