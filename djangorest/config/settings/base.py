@@ -72,7 +72,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ROOT_DIR.path('templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -149,7 +149,6 @@ STATICFILES_FINDERS = (
 )
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(APPS_DIR('media'))
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
