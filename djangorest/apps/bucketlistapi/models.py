@@ -8,7 +8,8 @@ from django.contrib.auth.models import User
 class Bucket(models.Model):
     """This class represents the bucket model"""
     title = models.CharField(max_length=255, blank=False, unique=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True)
+    date_created = models.DateField(auto_now_add=True)
 
     def __str__(self):
         """Return the title of the model instance"""
@@ -19,8 +20,8 @@ class Bucketlist(models.Model):
     bucket = models.ForeignKey(Bucket, related_name='bucketlists')
     name = models.CharField(max_length=255, blank=False, unique=True)
     description = models.TextField(blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
+    date_created = models.DateField(auto_now_add=True)
+    date_modified = models.DateField(auto_now=True)
 
     def __str__(self):
         """Return the name of the model instance"""
@@ -31,4 +32,4 @@ class Review(models.Model):
     review = models.TextField()
     rating = models.IntegerField()
     created_by = models.ForeignKey(User)
-    date_added = models.DateTimeField(auto_now_add=True)
+    date_added = models.DateField(auto_now_add=True)
