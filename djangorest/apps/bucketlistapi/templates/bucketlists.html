@@ -1,8 +1,8 @@
 {% extends 'dashboard.html' %}
 {% block content %}
- <h4>Bucket lists of {{ Bucketlists.title }}</h4>
+ <h4>Bucket lists of {{ bucket.title }}</h4>
    <ul>
-       {% for obj in Bucketlists.bucketlists %}
+       {% for obj in bucket.bucketlists %}
             <p>Name: {{ obj.name }}</p>
             <p>Description: {{ obj.description }}</p>
             <p>Date created: {{ obj.date_created }}</p>

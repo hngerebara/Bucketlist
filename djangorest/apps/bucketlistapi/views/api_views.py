@@ -3,14 +3,12 @@ from __future__ import unicode_literals
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from apps.bucketlistapi.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from rest_framework.response import Response
 from django.shortcuts import render, get_object_or_404, redirect
-from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import status, generics
-from .serializers import BucketSerializer, BucketlistSerializer, ReviewSerializer
-from .models import Bucket, Bucketlist, Review
-from .forms import BucketForm
+from apps.bucketlistapi.serializers import BucketSerializer, BucketlistSerializer, ReviewSerializer
+from apps.bucketlistapi.models import Bucket, Bucketlist, Review
 
 
 class ListCreateBucket(APIView):
