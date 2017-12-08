@@ -10,11 +10,18 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('date_added',)
 
+    def validate_rating(self, value):
+        if value in range(1, 6):
+            return value
+        raise serializers.ValidationError(
+            'The rating value must be between 1 and 5'
+        )
+
 class BucketlistSerializer(serializers.ModelSerializer):
     """Serializers to map the model int JSON format."""
     reviews = ReviewSerializer(many=True, read_only=True)
+
     class Meta:
-        """ Meta class to map serializers fields with the model fields."""
         model = Bucketlist
         fields = '__all__'
         read_only_fields = ('date_created', 'date_modified')
@@ -22,8 +29,8 @@ class BucketlistSerializer(serializers.ModelSerializer):
 class BucketSerializer(serializers.ModelSerializer):
     """Serializers to map the model int JSON format."""
     bucketlists = BucketlistSerializer(many=True, read_only=True)
+
     class Meta:
-        """ Meta class to map serializers fields with the model fields."""
         model = Bucket
         fields = '__all__'
         read_only_fields = ('date_created',)
