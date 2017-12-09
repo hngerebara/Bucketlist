@@ -5,7 +5,7 @@ __pycache_/
 static/
 .env
 *.sqlite
-.idea/
+.idea/*
 *.egg-info
 .xml
 

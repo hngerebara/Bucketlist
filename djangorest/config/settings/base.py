@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+APPS_DIR = os.path.join(BASE_DIR, 'apps')
 
 # Load .env variables with python-dotenv
 dotenv_path = join(BASE_DIR, '.env')
@@ -26,7 +27,6 @@ load_dotenv(dotenv_path)
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = env.bool('DJANGO_DEBUG', False)
 DEBUG = bool(int(os.getenv('DEBUG', False)))
 
 # Application definition
@@ -62,11 +62,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': os.path.join(BASE_DIR, 'templates'),
+        'DIRS': os.path.join(APPS_DIR, 'templates'),
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,14 +91,6 @@ DATABASES = {
         'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
         'HOST': os.environ.get('DATABASE_HOST'),
         'PORT': os.environ.get('DATABASE_PORT'),
-
-
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        # 'NAME': 'bucketlist_db',
-        # 'USER': 'hopeaz',
-        # 'PASSWORD': 'babygirlh13',
-        # 'HOST': 'localhost',
-        # 'PORT': '',
     }
 }
 
@@ -142,7 +133,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+STATICFILES_URL = (
+    os.path.join(BASE_DIR, 'static')
+)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
