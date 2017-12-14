@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div id="viewport">
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <header>
+      <a href="#">My Bucketlist App</a>
+    </header>
+    <ul class="nav">
+      <li>
+        <a href='#'>
+          <i class="zmdi zmdi-settings"></i> Create New Bucket
+        </a>
+      </li>
+        <li>
+        <a href="#">
+          <i class="zmdi zmdi-settings"></i> My Profile
+        </a>
+      </li>
+        <li>
+        <a href="#">
+          <i class="zmdi zmdi-settings"></i> Logout
+        </a>
+      </li>
+    </ul>
+  </div>
+  <!-- Content -->
+  <div class="wrapper">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">Hello {{ obj.created_by }}</a></li>
+        </ul>
+      </div>
+    </nav>
+      <h2> Buckets </h2>
+    <div class="container-fluid">
+       {% for obj in buckets %}
+        <div class="col-md-4 card">
+            <div class="card-body">
+                <h4 class="card-title">{{ obj.title }}</h4>
+                <p class="card-footer">{{ obj.date_created | date:"M D Y"  }}</p>
+                <p class="card-text">{{ obj.description }}</p>
+                <a href='{% url "bucketlist-app:single_bucket" bucket_id=obj.id %}' class="btn btn-primary">View Bucketlists</a>
+            </div>
+        </div>
+    {% endfor %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
