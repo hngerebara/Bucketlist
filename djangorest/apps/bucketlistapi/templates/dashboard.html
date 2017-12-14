@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard |{{ block.super }}{% endblock %}
 
 {% block content %}
 <div id="viewport">
@@ -10,7 +10,7 @@
     </header>
     <ul class="nav">
       <li>
-        <a href='#'>
+        <a href='{% url "bucketlist-app:create_bucket" %}'>
           <i class="zmdi zmdi-settings"></i> Create New Bucket
         </a>
       </li>
@@ -36,20 +36,34 @@
       </div>
     </nav>
       <h2> Buckets </h2>
-    <div class="container-fluid">
-       {% for obj in buckets %}
-        <div class="col-md-4 card">
-            <div class="card-body">
-                <h4 class="card-title">{{ obj.title }}</h4>
-                <p class="card-footer">{{ obj.date_created | date:"M D Y"  }}</p>
-                <p class="card-text">{{ obj.description }}</p>
-                <a href='{% url "bucketlist-app:single_bucket" bucket_id=obj.id %}' class="btn btn-primary">View Bucketlists</a>
+        <div class="container-fluid">
+            {% for obj in buckets %}
+            <div class="col-md-4 card" style="width: 20rem;">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href='{% url "bucketlist-app:bucket" bucket_id=obj.id %}'>
+                            {{ obj.id }}{{ obj.title }}
+                        </a>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ obj.date_created | date:"F j, Y"  }}</h6>
+                    </h4>
+                    <p class="card-text">
+                        {% if obj.description|wordcount < 5 %}
+                            <p class="card-text">{{ obj.description }}</p>
+                        {% else %}
+                            <p class="card-text">{{ obj.description|truncatewords:5 }}</p>
+                            <a href='{% url "bucketlist-app:bucket" bucket_id=obj.id %}'>Read more</a>
+                        {% endif %}
+                    </p>
+                    <a href='{% url "bucketlist-app:bucket" bucket_id=obj.id %}' class="btn btn-primary">View Bucketlists</a>
+                    <a href='{% url "bucketlist-app:create_bucketlist" bucket_id=obj.id %}' class="btn btn-primary">Create Bucketlists</a>
+                </div>
             </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-
+      {% include 'pagination.html' %}
     </div>
-  </div>
+    <div> Have questions or want to contribute? Please send me an <a href="mailto: hope.ngerebara@gmail.com">email</a></div>
 </div>
 {% endblock %}
 
