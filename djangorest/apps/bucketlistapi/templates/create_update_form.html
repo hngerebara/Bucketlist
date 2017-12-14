@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+   {% if title == "Create Bucket" or bucket.id %}
+        {% if title == "Create Bucket" %}
+            <h1>{{title}}</h1>
+        {% else %}
+        <h1>Update {{title}}</h1>
+        {% endif %}
+    {% elif title == "Create Bucketlist" or bucketlist.id %}
+        {% if title == "Create Bucketlist" %}
+            <h1>{{title}}</h1>
+        {% else %}
+            <h1>Update {{title}}</h1>
+        {% endif %}
+    {% elif title == "Create Review" or reviews.id %}
+        {% if title == "Create Review" %}
+            <h1>{{title}}</h1>
+        {% else %}
+            <h1>Update {{title}}</h1>
+        {% endif %}
+    {% endif %}
+    <form action='' enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}
+
+
