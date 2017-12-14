@@ -1,5 +1,6 @@
 <!doctype html>
 {% load staticfiles %}
+{% load humanize %}
 
 <html>
     <head>
@@ -8,7 +9,8 @@
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     </head>
     <body>
-         {% block content %}
-         {% endblock %}
+    {% include 'messages.html' %}
+        {% block content %}
+        {% endblock %}
     </body>
 </html>

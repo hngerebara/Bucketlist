@@ -1,15 +1,45 @@
 {% extends 'dashboard.html' %}
+{% load humanize %}
 {% block content %}
- <h4>Bucket lists of {{ bucket.title }}</h4>
-   <ul>
-       {% for obj in bucket.bucketlists %}
-            <p>Name: {{ obj.name }}</p>
-            <p>Description: {{ obj.description }}</p>
-            <p>Date created: {{ obj.date_created }}</p>
-             {% for reviews in obj.reviews %}
-                <p>review: {{reviews.review}}</p>
-             {% endfor %}
-       {% endfor %}
-       </ul>
+<section class="container">
+    <button>
+        <a href='{% url "bucketlist-app:buckets" %}'>
+           Go Back
+        </a>
+    </button>
+    <div>
+     {% for obj in bucket.bucketlists.all %}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <h4>{{ obj.name }} created on {{ obj.date_created }}</h4>
+                    <p>Description: {{ obj.description }}</p>
+                    <h5>review {{ obj.reviews.count|pluralize }}
+                    <span class="badge badge-primary badge-pill">{{ obj.reviews.count}} </span></h5>
+                    <button class="btn btn-primary" data-toggle="modal" href="#" data-target="#modal"> View reviews</button>
+                    <a href='{% url "bucketlist-app:edit_bucketlist" bucket_id=obj.bucket.id bucketlist_id=obj.id %}'
+                       class="btn btn-primary">Edit</a>
+                     <a href='{% url "bucketlist-app:delete_bucketlist" bucket_id=obj.bucket.id bucketlist_id=obj.id %}'
+                       class="btn btn-primary">Delete</a>
+                    <a href='{% url "bucketlist-app:create_bucketlist_review" bucket_id=obj.bucket.id bucketlist_id=obj.id %}'
+                       class="btn btn-primary">Create Review</a>
+                    <p>
+                        {% for reviews in obj.reviews.all %}
+                            ({{ reviews.rating |apnumber }} stars)
+                            {{ reviews.review }}{{ reviews.date_added }}
+                            <a href='{% url "bucketlist-app:edit_bucketlist_review" review_id=reviews.id bucket_id=obj.bucket.id bucketlist_id=obj.id %}'
+                       class="btn btn-primary">Update Review</a>
+                        <a href='{% url "bucketlist-app:delete_bucketlist_review" review_id=reviews.id bucket_id=obj.bucket.id bucketlist_id=obj.id %}'
+                       class="btn btn-primary">Delete Review</a>
+                        {% endfor %}
+                    </p>
+                    <p>
+                    </p>
+                 </li>
+            </ul>
+        {% endfor %}
+     </div>
+
+</section>
+
 {% endblock %}
 
